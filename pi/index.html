@@ -1,0 +1,458 @@
+<title>PI Scheme</title>
+<style type="text/css" media="screen">
+	body { background-color: #000; }
+	body,td { font: .8em Gotham, Helvetica Neue, Helvetica, Arial Narrow, Arial; font-weight: 500; color: #666; padding: 0; margin: 0; }
+	ul { list-style: none none; margin: 0; padding: 0; display: block; }
+	
+	a,a:link { color: #ffcc00; text-decoration: none; }
+	
+	td { padding: 4px 4px; text-align: center; border: 1px solid #111; border-width: 1px 0; }
+	tr:last-child td { border-bottom-width: 0; }
+	tr.header td { padding: 10px 4px; font-size: 1.5em; font-weight: 200; color: #aaa; }
+	tr.header td i { font-size: .4em; font-weight: 200; font-style: normal; }
+
+	.items li { margin: 5px 0px; }
+	.items li.current span { text-shadow: 0px 0px 8px #79cef4; }
+	.arrows li { margin: 5px 0px; color: #333; }
+	.items li span { white-space: nowrap; cursor: pointer; background-color: rgba(0,0,0,0.75); border-radius: 3px; padding: 1px 4px; }
+	
+	tr.footer { display: none; }
+/*
+	tr.footer td { color: #111; }
+	.p1 td,.p2 td,.p3 td,.p4 td,
+	.p1,.p2,.p3,.p4 { font-weight: 900 !important; }
+	.p1.current,.p2.current,.p3.current,.p4.current,
+	.p1.current td,.p2.current td,.p3.current td,.p4.current td { color: red; }
+*/
+	#canvas { z-index: 1; display: block; position: absolute; left: 0; top: 0; background-color: transparent; }
+	#pi { z-index: 2; border-collapse: collapse; position: relative; left: 0; top: 0; }
+
+    </style>
+    <body>
+        <table id="pi" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr class="header">
+                <td valign="top">Planets</td>
+                <td valign="top" colspan="3" style="text-align: right;">Resources</td>
+                <td valign="top"></td>
+                <td valign="top" colspan="3" style="text-align: left;">Basic<br> <i>P1 - 1800s</i></td>
+                <td valign="top"></td>
+                <td valign="top" colspan="3">Refined<br> <i>P2 - 3600s</i></td>
+                <td valign="top"></td>
+                <td valign="top" colspan="3">Specialized<br> <i>P3 - 3600s</i></td>
+                <td valign="top"></td>
+                <td valign="top" colspan="3">Advanced<br> <i>P4 - 3600s</i></td>
+            </tr>
+            <tr>
+                <td class="items">
+                    <ul id="planets">
+                        <li>Barren</li>
+                        <li>Gas</li>
+                        <li>Ice</li>
+                        <li>Lava</li>
+                        <li>Oceanic</li>
+                        <li>Plasma</li>
+                        <li>Storm</li>
+                        <li>Temperate</li>
+                    </ul>
+                </td>
+                <td colspan="3" class="items" style="text-align: right;">
+                    <ul id="resources">
+                        <li class="barren gas ice oceanic storm temperate">Aqueous Liquids</li>
+                        <li class="temperate">Autotrophs</li>
+                        <li class="barren gas lava plasma storm">Base Metals</li>
+                        <li class="barren oceanic temperate">Carbon Compounds</li>
+                        <li class="oceanic temperate">Complex Organisms</li>
+                        <li class="lava">Felsic Magma</li>
+                        <li class="ice lava plasma">Heavy Metals</li>
+                        <li class="gas storm">Ionic Solutions</li>
+                        <li class="barren ice oceanic temperate">Micro Organisms</li>
+                        <li class="gas ice storm">Noble Gas</li>
+                        <li class="barren plasma">Noble Metals</li>
+                        <li class="lava plasma">Non-CS Crystals</li>
+                        <li class="ice oceanic">Planktic Colonies</li>
+                        <li class="gas">Reactive Gas</li>
+                        <li class="lava plasma storm">Suspended Plasma</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="arrows">
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                        <li>&rarr;</li>
+                </ul>
+                </td>
+                <td colspan="3" class="items" style="text-align: left;">
+                    <ul id="basic">
+                        <li class="aqueous-liquids">Water</li>
+                        <li class="autotrophs">Industrial Fibers</li>
+                        <li class="base-metals">Reactive Metals</li>
+                        <li class="carbon-compounds">Biofuels</li>
+                        <li class="complex-organisms">Proteins</li>
+                        <li class="felsic-magma">Silicon</li>
+                        <li class="heavy-metals">Toxic Metals</li>
+                        <li class="ionic-solutions">Electrolytes</li>
+                        <li class="micro-organisms">Bacteria</li>
+                        <li class="noble-gas">Oxygen</li>
+                        <li class="noble-metals">Precious Metals</li>
+                        <li class="non-cs-crystals">Chiral Structures</li>
+                        <li class="planktic-colonies">Biomass</li>
+                        <li class="reactive-gas">Oxidizing Compound</li>
+                        <li class="suspended-plasma">Plasmoids</li>
+                    </ul>
+                </td>
+                <td class="items"></td>
+                <td colspan="3" class="items">
+                    <ul id="refined">
+                        <li class="biofuels precious-metals">Biocells</li>
+                        <li class="reactive-metals toxic-metals">Construction Blocks</li>
+                        <li class="toxic-metals chiral-structures pos">Consumer Electronics</li>
+                        <li class="electrolytes water pos">Coolant</li>
+                        <li class="precious-metals toxic-metals pos">Enriched Uranium</li>
+                        <li class="bacteria proteins">Fertilizer</li>
+                        <li class="proteins biomass">Gen. Enhanced Livestock</li>
+                        <li class="proteins biofuels">Livestock</li>
+                        <li class="reactive-metals precious-metals pos">Mechanical Parts</li>
+                        <li class="industrial-fibers silicon">Microfiber Shielding</li>
+                        <li class="chiral-structures silicon">Miniature Electronics</li>
+                        <li class="bacteria reactive-metals">Nanites</li>
+                        <li class="oxidizing-compound oxygen">Oxides</li>
+                        <li class="oxidizing-compound industrial-fibers">Polyaramids</li>
+                        <li class="biofuels industrial-fibers">Polytextiles</li>
+                        <li class="plasmoids electrolytes">Rocket Fuel</li>
+                        <li class="oxidizing-compound silicon">Silicate Glass</li>
+                        <li class="plasmoids water">Superconductors</li>
+                        <li class="oxygen biomass">Supertensile Plastics</li>
+                        <li class="electrolytes oxygen">Synthetic Oil</li>
+                        <li class="bacteria water">Test Cultures</li>
+                        <li class="plasmoids chiral-structures">Transmitter</li>
+                        <li class="bacteria biomass">Viral Agent</li>
+                        <li class="reactive-metals water">Water-Cooled CPU</li>
+                    </ul>
+                </td>
+                <td class="items"></td>
+                <td colspan="3" class="items">
+                    <ul id="specialized">
+                        <li class="nanites livestock construction-blocks">Biotech Research Reports</li>
+                        <li class="silicate-glass rocket-fuel">Camera Drones</li>
+                        <li class="oxides coolant">Condensates</li>
+                        <li class="test-cultures synthetic-oil fertilizer">Cryoprotectant Solution</li>
+                        <li class="supertensile-plastics microfiber-shielding">Data Chips</li>
+                        <li class="biocells oxides superconductors">Gel-Matrix Biopaste</li>
+                        <li class="water-cooled-cpu transmitter">Guidance Systems</li>
+                        <li class="polytextiles viral-agent transmitter">Hazmat Detection Systems</li>
+                        <li class="polyaramids gen-enhanced-livestock">Hermetic Membranes</li>
+                        <li class="polyaramids transmitter">High-Tech Transmitters</li>
+                        <li class="fertilizer polytextiles">Industrial Explosives</li>
+                        <li class="biocells silicate-glass">Neocoms</li>
+                        <li class="microfiber-shielding enriched-uranium">Nuclear Reactors</li>
+                        <li class="supertensile-plastics mechanical-parts miniature-electronics">Planetary Vehicles</li>
+                        <li class="mechanical-parts consumer-electronics pos">Robotics</li>
+                        <li class="construction-blocks miniature-electronics">Smartfab Units</li>
+                        <li class="water-cooled-cpu coolant consumer-electronics">Supercomputers</li>
+                        <li class="supertensile-plastics test-cultures">Synthetic Synapses</li>
+                        <li class="biocells nanites">Transcranial Microcontrollers</li>
+                        <li class="synthetic-oil superconductors">Ukomi Super Conductors</li>
+                        <li class="livestock viral-agent">Vaccines</li>
+                    </ul>
+                </td>
+                <td class="items" style=""></td>
+                <td colspan="3" class="items" style="">
+                    <ul id="advanced">
+                        <li class="neocoms data-chips high-tech-transmitters">Broadcast Node</li>
+                        <li class="gel-matrix-biopaste hazmat-detection-systems planetary-vehicles">Integrity Response Drones</li>
+                        <li class="industrial-explosives ukomi-super-conductors reactive-metals">Nano-Factory</li>
+                        <li class="condensates robotics bacteria">Organic Mortar Applicators</li>
+                        <li class="synthetic-synapses guidance-systems transcranial-microcontrollers">Recursive Computing Module</li>
+                        <li class="camera-drones nuclear-reactors hermetic-membranes">Self-Harmonizing Power Core</li>
+                        <li class="smartfab-units vaccines water">Sterile Conduits</li>
+                        <li class="supercomputers biotech-research-reports cryoprotectant-solution">Wetware Mainframe</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr class="p1 footer">
+                <td></td>
+                <td></td>
+                <td>3000<i>u</i></td>
+                <td></td>
+                <td>&rarr;</td>
+                <td></td>
+                <td>20<i>u</i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="p2 footer">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>40<i>u</i></td>
+                <td></td>
+                <td>&rarr;</td>
+                <td></td>
+                <td>5<i>u</i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="p3 footer">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>10<i>u</i></td>
+                <td></td>
+                <td>&rarr;</td>
+                <td></td>
+                <td>3<i>u</i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="p4 footer">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>40<i>u</i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>6<i>u</i></td>
+                <td></td>
+                <td>&rarr;</td>
+                <td></td>
+                <td>1<i>u</i></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="width: 8%;">&nbsp;</td>
+                <td style="width: 12%;">&nbsp;</td>
+                <td style="width: 4%;">&nbsp;</td>
+                <td style="width: 1%;">&nbsp;</td>
+                <td style="width: 1%;">&nbsp;</td>
+                <td style="width: 1%;">&nbsp;</td>
+                <td style="width: 4%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 1%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 1%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 1%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+                <td style="width: 4%;">&nbsp;</td>
+                <td style="width: 7%;">&nbsp;</td>
+            </tr>
+        </table>
+        <canvas id="canvas"></canvas>
+        <div style="position: fixed; bottom: 0; text-align: center; width: 100%;">
+        <h2 style="margin: 0px;">Disclaimer</h2>
+        This project was liberated for the benefit of others, and with respect to its original authors. <br><br>
+        &copy; 2004 alysii.com, &copy; 2018 hanns.io<br>
+        Material related to EVE-Online is used with limited permission of CCP Games hf.<br>
+        No official affiliation or endorsement by CCP Games hf is stated or implied.<br><br>
+        <small style="font-size: 0.6em">EVE Online and the EVE logo are the registered trademarks of CCP hf. All rights are reserved worldwide. All other trademarks are the property of their respective owners. EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual property of CCP hf. All artwork, screenshots, characters, vehicles, storylines, world facts or other recognizable features of the intellectual property relating to these trademarks are likewise the intellectual property of CCP hf. CCP hf. has granted permission to [insert your name or site name] to use EVE Online and all associated logos and designs for promotional and information purposes on its website but does not endorse, and is not in any way affiliated with, [insert name or site name]. CCP is in no way responsible for the content on or functioning of this website, nor can it be liable for any damage arising from the use of this website.</small>
+        </div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+    
+    var colors = ["#333","#492f1f","#763c19","#f7941d","yellow","#79cef4","#00aeef","lime","green","#304b15"];
+    $(".items li").css({color:colors[0]});
+    
+    canvas();
+    $(window).resize(function() { // todo: get event, only repaint on mouse release
+        canvas();
+    });
+
+    // distribute before list to span
+    $(".items ul li")
+        .wrapInner($('<span />'))
+        .each(function() {
+
+            item = lower_case($(this).children("span").html());        // turn item name css compliant
+            $(this).attr({ id: item });                                // set li id as item name
+            
+            if ($(this).parents("ul").attr("id") != "planets") {       // planets has no before
+                list = $(this).attr("class").split(/\s+/);             // get before items from li class
+                for (i in list) {
+                    $("#"+list[i]+" span").addClass(item);             // find id with class, inject itself into span as class
+                }
+            }
+        })
+    $('.items')
+        .on('mouseenter','ul li',function() {
+            if (! $('#pi').hasClass('sticky')) {
+                $(this).addClass("current");
+                $(this).css({color:colors[5]});
+                pi_link($(this));
+            }
+        })
+        .on('mouseleave','ul li',function() {
+            if (! $('#pi').hasClass('sticky')) {
+                $(this).removeClass("current");
+                $(".items li").css({color:colors[0]});
+                canvas();
+            }
+        })
+        .on('click','ul li',function() {
+            
+            if (!$(this).hasClass('current')) {
+                $('#pi').removeClass('sticky')
+            }
+            
+            if ($('#pi').hasClass('sticky')) {
+                $('#pi').removeClass('sticky')
+                
+                $('.items li').removeClass('current').css({color:colors[0]});
+            } else {
+                $('#pi').addClass('sticky')
+                
+                $('.items li').removeClass('current').css({color:colors[0]});
+                canvas();
+
+                $(this).addClass("current");
+                $(this).css({color:colors[5]});
+                pi_link($(this));
+            }
+        })
+        
+        // $("ul#basic").hover(function() { $(".p1").toggleClass("current"); });
+        // $("ul#refined").hover(function() { $(".p2").toggleClass("current"); });
+        // $("ul#specialized").hover(function() { $(".p3").toggleClass("current"); });
+        // $("ul#advanced").hover(function() { $(".p4").toggleClass("current"); });
+    
+    function lower_case(s) { return s.toLowerCase().replace(/ /g, '-').replace(/\./g, ''); }
+    function pi_link(item) {
+        pi_link_before(item,-1);
+        pi_link_after(item,1);
+    }
+    function pi_link_before(item, degree, depth) {
+        type   = item.parent("ul").attr("id");
+        degree = degree + ((type == "basic") ? 1 : 0);
+
+        class_prefex = ".items li span.";
+        $(".items li span."+item.attr("id"))
+            .each(function() {
+                $(this).parent("li").css({color: colors[5+degree]});
+                if (type != "basic" && degree > -4) {
+                    line(item.children("span"),$(this),colors[5+degree],colors[5+degree+1]);
+                }
+                pi_link_before($(this).parent("li"),degree-1);
+            });
+    }
+    function pi_link_after(item, degree, depth) {
+        type   = item.parent("ul").attr("id");
+        degree = degree + ((type == "resources") ? -1 : 0);
+        
+        $(".items li."+item.attr("id"))
+            .each(function() {
+                $(this).css({color: colors[5+degree]});
+                if (type != "resources" && degree < 3) {
+                    line($(this).children("span"),item.children("span"),colors[5+degree-1],colors[5+degree]);
+                }
+                pi_link_after($(this),degree+1);
+            });
+    }
+    
+    $("#disco").toggle(
+        function() {
+            $(this).text("Disco!");
+        }
+    ,
+        function() {
+            $(this).text("Planets");
+        }
+    );
+});
+function canvas() {
+    $("#canvas").attr({ 
+        "height": $("#pi").outerHeight(),
+        "width": $("#pi").outerWidth() 
+    });
+}
+function line(a,b,c1,c2) {
+    pad = 0;
+    fx  = a.position().left + 4;
+    fy  = a.position().top + a.height()/2 + 1;
+    tx  = b.position().left + b.width() + 2;
+    ty  = b.position().top + b.height()/2 + 1;
+
+    var cvs = document.getElementById('canvas');
+
+    var ctx = cvs.getContext('2d');
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(tx,ty);
+    ctx.lineTo(fx,fy);
+    ctx.globalAlpha = 0.5;
+
+    var gdt = ctx.createLinearGradient( tx,ty, fx,fy );
+    gdt.addColorStop(0, c1);
+    gdt.addColorStop(1, c2);
+
+    ctx.strokeStyle = gdt;
+    ctx.stroke();
+}
+
+
+pi = {
+    planets: ['Barren','Gas','Ice','Lava','Oceanic','Plasma','Storm','Temperate'],
+    resources: ['Aqueous Liquids','Autotrophs','Base Metals','Carbon Compounds','Complex Organisms','Felsic Magma','Heavy Metals','Ionic Solutions','Micro Organisms','Noble Gas','Noble Metals','Non-CS Crystals','Planktic Colonies','Reactive Gas','Suspended Plasma'],
+    productions: {
+        basic: ['Water','Industrial Fibers','Reactive Metals','Biofuels','Proteins','Silicon','Toxic Metals','Electrolytes','Bacteria','Oxygen','Precious Metals','Chiral Structures','Biomass','Oxidizing Compound','Plasmoids'],
+        refined: ['Biocells','Construction Blocks','Consumer Electronics','Coolant','Enriched Uranium','Fertilizer','Gen. Enhanced Livestock','Livestock','Mechanical Parts','Microfiber Shielding','Miniature Electronics','Nanites','Oxides','Polyaramids','Polytextiles','Rocket Fuel','Silicate Glass','Superconductors','Supertensile Plastics','Synthetic Oil','Test Cultures','Transmitter','Viral Agent','Water-Cooled CPU'],
+        specialized: ['Biotech Research Reports','Camera Drones','Condensates','Cryoprotectant Solution','Data Chips','Gel-Matrix Biopaste','Guidance Systems','Hazmat Detection Systems','Hermetic Membranes','High-Tech Transmitters','Industrial Explosives','Neocoms','Nuclear Reactors','Planetary Vehicles','Robotics','Smartfab Units','Supercomputers','Synthetic Synapses','Transcranial Microcontrollers','Ukomi Super Conductors','Vaccines'],
+        advanced: ['Broadcast Node','Integrity Response Drones','Nano-Factory','Organic Mortar Applicators','Recursive Computing Module','Self-Harmonizing Power Core','Sterile Conduits','Wetware Mainframe']
+    } 
+}
+</script>
